@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />        
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" href="main.css">
+    <title>Vite App</title>
+  </head>
+  <body>
+    <canvas></canvas>
+    <div class="container">
+      <div class="row">
+        <div class="heading">
+          WELCOME TO MAXIMUS 3D
+        </div>
+      </div>
+      <div class="row">
+        <div class="img-div">
+          <img src="/table.PNG" alt="table">
+          <button class="btn">Try out</button>
+        </div>
+        <div class="img-div">
+          <img src="/chair.PNG" alt="table">
+          <button class="btn">Try out</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+            
+      const canvas=document.querySelector('canvas')
+      const ctx=canvas.getContext('2d')
+
+      canvas.width=window.innerWidth
+      canvas.height=window.innerHeight
+
+      let colorArray=['#1B4242','#5C8374','#9EC8B9']
+      var angle=0.1
+      class Particle{
+          constructor(x,y,size,rate,color)
+          {
+              this.x=x;
+              this.y=y;
+              this.size=size;
+              this.rate=rate
+              this.color=color
+
+          }
+          Draw()
+          {
+              ctx.beginPath()
+                  ctx.globalAlpha=0.2
+                  ctx.lineWidth=5;
+                  ctx.strokeStyle=this.color;
+                  ctx.fillStyle=this.color
+                  ctx.arc(this.x,this.y,this.size,0,Math.PI*2,false)
+                  ctx.stroke()
+                  ctx.fill()
+              ctx.closePath()
+
+              this.size=Math.abs(Math.sin(angle*this.rate)*100)+1
+          }
+          
+      }
+
+      let particle=[]
+      function Init()
+      {
+          for(let i=0;i<50;i++)
+          {
+              let x=parseInt(Math.random()*canvas.width);
+              let y=parseInt(Math.random()*canvas.height)
+
+              let size=Math.random()*50+10
+              let rate=Math.random()
+              let color=colorArray[parseInt(colorArray.length*Math.random())]
+
+              particle.push(new Particle(x,y,10,rate,color))
+          }
+      }
+
+      function animate()
+      {
+          ctx.beginPath()
+              ctx.clearRect(0,0,canvas.width,canvas.height)
+          ctx.closePath()
+          requestAnimationFrame(animate)
+          
+          particle.map(i=>{
+              i.Draw()
+          })
+          angle+=0.01
+
+          canvas.setAttribute('style',`filter:blur(${Math.abs(Math.sin(angle*10))+1});`)
+      }
+      Init()
+      animate()
+      let btn=document.querySelectorAll('.btn');
+      btn[0].addEventListener("click",()=>{
+          sessionStorage.setItem('id',10);  
+          let a=document.createElement('a')
+          a.href='./src/config.html'
+          a.click()
+        
+      })
+      btn[1].addEventListener("click",()=>{
+          sessionStorage.setItem('id',5);  
+          let a=document.createElement('a')
+          a.href='./src/config.html'
+          a.click()
+        
+      })
+  </script>
+  </body>
+</html>
